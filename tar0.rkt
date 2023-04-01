@@ -1,3 +1,6 @@
+; Mordechai Cohen 206958035
+; Yisrael Jacob 316481514
+
 #lang racket
 
 ; Define global variables for the total buys and sells
