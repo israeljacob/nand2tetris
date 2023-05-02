@@ -1,5 +1,4 @@
-; Mordechai Cohen 206958035
-; Yisrael Jacob 316481514
+
 
 #lang racket
 
