@@ -23,24 +23,25 @@
        (("and\r") (binary-code "&" output-port))
        (("or\r") (binary-code "|" output-port))
        (("not\r") (unary-code "!" output-port))
-       (("label") (define label-name (substring (list-ref words 1) 0 (sub1 (string-length (list-ref words 1))))) (label vm-file-name label-name output-port))
-       (("goto") (define label-name (substring (list-ref words 1) 0 (sub1 (string-length (list-ref words 1))))) (goto vm-file-name label-name output-port))
-       (("if-goto") (define label-name (substring (list-ref words 1) 0 (sub1 (string-length (list-ref words 1))))) (if-goto vm-file-name label-name output-port))
-       (("push") (push (list-ref words 1) (list-ref words 2) output-port folder-name))
-       (("pop") (pup (list-ref words 1) (list-ref words 2) output-port folder-name))
-       (("call") (call (list-ref words 1) (list-ref words 2) output-port))
+       (("label") (define label-name (list-ref (string-split (list-ref words 1) "\r") 0)) (label vm-file-name label-name output-port))
+       (("goto") (define label-name (list-ref (string-split (list-ref words 1) "\r") 0)) (goto vm-file-name label-name output-port))
+       (("if-goto") (define label-name (list-ref (string-split (list-ref words 1) "\r") 0)) (if-goto vm-file-name label-name output-port))
+       (("push") (push (list-ref words 1) (list-ref words 2) output-port vm-file-name))
+       (("pop") (pup (list-ref words 1) (list-ref words 2) output-port vm-file-name))
+       (("call") (call (list-ref words 1) (string->number (list-ref (string-split (list-ref words 2)"\r") 0)) output-port))
        (("function") (function (list-ref words 1) (list-ref words 2) output-port))
-       (("return") (return output-port))))
+       (("return\r") (return output-port))))
 
 
 ; This function takes a directory, a VM file, and an output file as arguments.
 (define (process-vm-file directory vm-file folder-name)
+  
   ; It opens the input and output files and displays the name of the VM file (without the .vm extension)
   ; followed by a newline character to the output file.
   (define input-port (open-input-file (string-append directory "/" (path->string vm-file))))
   (define vm-file-name (path->string vm-file))
   (define output-port (open-output-file (string-append directory "\\" folder-name ".asm") #:exists 'append))
-  
+
   ; It then reads lines from the input file and processes them using HandleBuy or HandleSell depending on whether
   ; the line starts with "buy" or "sell". When it reaches the end of the input file, it closes the input and output files.
   (let loop ((line (read-line input-port)))
@@ -59,6 +60,10 @@
 
 ; This function takes a directory and an output file as arguments.
 (define (process-directory directory folder-name)
+   (define output-port (open-output-file (string-append directory "\\" folder-name ".asm") #:exists 'append))
+   (display "@256\nD=A\n@SP\nM=D\n\n" output-port)
+   (call "Sys.init" 0 output-port)
+   (close-output-port output-port)
   ; It uses directory-list to obtain a list of VM files in the directory, and then applies process-vm-file to each file in turn.
   (define (vm-file? file)
      (regexp-match? (regexp-quote ".vm") (path->string file)))

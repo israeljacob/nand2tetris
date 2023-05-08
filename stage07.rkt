@@ -25,7 +25,7 @@
 
 
 
-(define (push segment index output-port folder-name)
+(define (push segment index output-port vm-file-name)
   (case segment
           ;; argument: push the value of the argument segment[index] onto the stack.
           ;; local: push the value of the local segment[index] onto the stack.
@@ -37,7 +37,7 @@
           ;; temp: push the value of the temp segment[index] onto the stack.
           (("argument") (display (string-append "@ARG\nD=M\n@" index "\nA=D+A\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n\n") output-port))
           (("local") (display (string-append "@LCL\nD=M\n@" index "\nA=D+A\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n\n") output-port))
-          (("static") (display (string-append "@" (string-append folder-name "." index) "\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n\n") output-port))
+          (("static") (display (string-append "@" vm-file-name "." index "\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n\n") output-port))
           (("constant") (display (string-append "@" index "\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n\n") output-port))
           (("this") (display (string-append "@THIS\nD=M\n@" index "\nA=D+A\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n\n") output-port))
           (("that") (display (string-append "@THAT\nD=M\n@" index "\nA=D+A\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n\n") output-port))
@@ -45,7 +45,7 @@
           (("temp") (display (string-append "@5\nD=A\n@" index "\nA=D+A\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n\n") output-port))))
   
   
-  (define (pup segment index output-port folder-name)
+  (define (pup segment index output-port vm-file-name)
     (case segment
           ;; argument: pop the top value of the stack and store it in argument segment[index].
           ;; local: pop the top value of the stack and store it in local segment[index].
@@ -56,7 +56,7 @@
           ;; temp: pop the top value of the stack and store it in temp segment[index].
           (("argument") (display (string-append "@ARG\nD=M\n@" index "\nD=D+A\n@R13\nM=D\n@SP\nA=M-1\nD=M\n@R13\nA=M\nM=D\n@SP\nM=M-1\n\n") output-port))
           (("local") (display (string-append "@LCL\nD=M\n@" index "\nD=D+A\n@R13\nM=D\n@SP\nA=M-1\nD=M\n@R13\nA=M\nM=D\n@SP\nM=M-1\n\n") output-port))
-          (("static") (display (string-append "@SP\nA=M-1\nD=M\n@" (string-append folder-name "." index) "\nM=D\n@SP\nM=M-1\n\n") output-port))
+          (("static") (display (string-append "@SP\nA=M-1\nD=M\n@" vm-file-name "." index "\nM=D\n@SP\nM=M-1\n\n") output-port))
           (("this") (display (string-append "@THIS\nD=M\n@" index "\nD=D+A\n@R13\nM=D\n@SP\nA=M-1\nD=M\n@R13\nA=M\nM=D\n@SP\nM=M-1\n\n") output-port))
           (("that") (display (string-append "@THAT\nD=M\n@" index "\nD=D+A\n@R13\nM=D\n@SP\nA=M-1\nD=M\n@R13\nA=M\nM=D\n@SP\nM=M-1\n\n") output-port))
           (("pointer") (display (string-append "@THIS\nD=A\n@" index "\nD=D+A\n@R13\nM=D\n@SP\nA=M-1\nD=M\n@R13\nA=M\nM=D\n@SP\nM=M-1\n\n") output-port))
