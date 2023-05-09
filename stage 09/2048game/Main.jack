@@ -1,0 +1,12 @@
+class Main {
+
+    /** Initializes a new game and starts it. */
+    function void main() {
+
+        var Table2048 game;
+        let game = Table2048.new();
+        do game.run();
+        //do game.dispose();
+        return;
+    }
+}
