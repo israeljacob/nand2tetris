@@ -6,7 +6,7 @@ class Main {
         var Table2048 game;
         let game = Table2048.new();
         do game.run();
-        //do game.dispose();
+        do game.dispose();
         return;
     }
 }
