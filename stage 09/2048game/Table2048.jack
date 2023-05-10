@@ -1,3 +1,9 @@
+/** 
+ * A class representing the game table for 2048. 
+ * The game is played on a 4x4 grid, and the goal is to merge tiles with the same number 
+ * to create a tile with the number 2048. 
+ * The game is over when the table is full and there are no more possible moves.
+ */
 class Table2048{
  field Array arrRow1;
  field Array arrRow2;
@@ -9,7 +15,13 @@ class Table2048{
  field Array arrCol4;
  field int score;
 	
+	/**
+     * Constructs a new instance of the Table2048 class.
+     * Initializes the table, sets the initial score to 0, and creates the first tile.
+     * @return The newly created Table2048 instance.
+     */
 	constructor Table2048 new(){
+		// Initialize arrays and score
 		let arrRow1 = Array.new(5);
 		let arrRow2 = Array.new(5);
 		let arrRow3 = Array.new(5);
@@ -20,7 +32,7 @@ class Table2048{
 		let arrCol4 = Array.new(5);
 		let score = 0;
 		
-		
+		// Make the game table and place initial value
 		do MakeTable();
 		let arrCol1[0] = 2;
 		let arrRow1[0] = 2;
@@ -29,11 +41,34 @@ class Table2048{
 		return this;
 	}
 	
+	/**
+     * Disposes of the Table2048 instance by releasing all of its resources.
+     */
+	method  void dispose(){
+		// Dispose of arrays and deallocate object memory
+		do arrCol1.dispose();
+		do arrCol2.dispose();
+		do arrCol3.dispose();
+		do arrCol4.dispose();
+		do arrRow1.dispose();
+		do arrRow2.dispose();
+		do arrRow3.dispose();
+		do arrRow4.dispose();
+		
+		do Memory.deAlloc(this);
+		return;
+	}
+	
+	/**
+     * Initializes the game table by setting all the elements to 0 and drawing the grid lines.
+     */
 	method void MakeTable(){
 		var int i, sizeX, sizeY;
 		let i=0;
 		let sizeX=150;
 		let sizeY=20;
+		
+		// Draw horizontal lines
 		while (i<5){
 			let arrRow1[i] = 0;
 			let arrRow2[i] = 0;
@@ -52,6 +87,8 @@ class Table2048{
 		let i=0;
 		let sizeX=150;
 		let sizeY=20;
+		
+		// Draw vertical lines
 		while (i<5){
 			do Screen.setColor(true);
 			do Screen.drawLine(sizeX, sizeY, sizeX,220);
@@ -61,19 +98,29 @@ class Table2048{
 		return;
 	}
 	
+	/**
+   * Runs the game loop until the game is over or the user exits the game.
+   */
 	method void run() {
 		var char key;
 		var boolean changed;
+		
+		// Main game loop
 		while(true) {
+			// Display the score and the game board
 			do Output.moveCursor(0,0);
 			do Output.printString("Score: ");
 			do Output.printInt(score);
 			do fillScreen();
+			
+			// Wait for user input
 			while(key = 0) {
 				let key = Keyboard.keyPressed();
 			}
 			
 			let changed = false;
+			
+			// Check arrow keys pressed and move accordingly
 			if(key = 131) { // Up arrow
 				do moveUp();
 				let changed = checkIfSomthingChanged();
@@ -95,10 +142,12 @@ class Table2048{
 				do updateRows();
 			}
 			
+			// If the game state changed, insert a new tile
 			if(changed) {
 				do insert2();
 			}
 			
+			 // Update the game board and check for game over conditions
 			do updateCols();
 			do fillScreen();
 			if(checkGameOver()) {
@@ -111,11 +160,16 @@ class Table2048{
 		return;
 	}
 	
+	// Moves all of the tiles in the table up one row.
 	method void moveUp() {
 		var int i, j;
 		let i = 0;
+		
+		// Loop through each row of the table.
 		while(i < 4) {
 			let j = 0;
+			
+			// Loop through each column of the row.
 			while(j<3) {
 				if(arrRow1[i] = 0) {
 					let arrRow1[i] = arrRow2[i];
@@ -141,6 +195,7 @@ class Table2048{
 					let arrRow4[i] = 0;
 				}
 			
+			// Combine adjacent tiles with the same value.
 			if(arrRow1[i] = arrRow2[i] & ~(arrRow1[i] = 0)){
 				let score = score + (arrRow1[i] * 2);
 				let arrRow1[i] = arrRow1[i] * 2;
@@ -164,11 +219,16 @@ class Table2048{
         return;
     }
 	
+	// Moves all of the tiles in the table down one row.
 	method void moveDown() {
 		var int i, j;
 		let i = 0;
+		
+		// Loop through each row of the table.
 		while(i < 4) {
 			let j = 0;
+			
+			 // Loop through each column of the row.
 			while(j<3) {
 				if(arrRow4[i] = 0) {
 					let arrRow4[i] = arrRow3[i];
@@ -194,6 +254,7 @@ class Table2048{
 					let arrRow1[i] = 0;
 				}
 			
+			// Combine adjacent tiles with the same value.
 			if(arrRow4[i] = arrRow3[i] & ~(arrRow4[i] = 0)){
 				let score = score + (arrRow4[i] * 2);
 				let arrRow4[i] = arrRow4[i] * 2;
@@ -217,11 +278,16 @@ class Table2048{
         return;
 	}
 	
+	// Moves all of the tiles in the table left one column.
 	method void moveLeft() {
 		var int i, j;
 		let i = 0;
+		
+		// Loop through each column of the table.
 		while(i < 4) {
 			let j = 0;
+			
+			// Loop through each row of the column.
 			while(j<3) {
 				if(arrCol1[i] = 0) {
 					let arrCol1[i] = arrCol2[i];
@@ -247,6 +313,7 @@ class Table2048{
 					let arrCol4[i] = 0;
 				}
 			
+			// Combine adjacent tiles with the same value.
 			if(arrCol1[i] = arrCol2[i] & ~(arrCol1[i] = 0)){
 				let score = score + (arrCol1[i] * 2);
 				let arrCol1[i] = arrCol1[i] * 2;
@@ -270,11 +337,16 @@ class Table2048{
         return;
 	}
 	
+	// Moves all of the tiles in the table right one column.
 	method void moveRight() {
 		var int i, j;
 		let i = 0;
+		
+		// Loop through each column of the table.
 		while(i < 4) {
 			let j = 0;
+			
+			// Loop through each row of the column.
 			while(j<3) {
 				if(arrCol4[i] = 0) {
 					let arrCol4[i] = arrCol3[i];
@@ -300,6 +372,7 @@ class Table2048{
 					let arrCol1[i] = 0;
 				}
 			
+			// Combine adjacent tiles with the same value.
 			if(arrCol4[i] = arrCol3[i] & ~(arrCol4[i] = 0)){
 				let score = score + (arrCol4[i] * 2);
 				let arrCol4[i] = arrCol4[i] * 2;
@@ -323,6 +396,9 @@ class Table2048{
         return;
 	}
 	
+	/**
+     * Updates the row arrays based on the column arrays.
+     */
 	method void updateCols() {
 		let arrCol1[0] = arrRow1[0];
 		let arrCol1[1] = arrRow2[0];
@@ -346,6 +422,9 @@ class Table2048{
 		return;
 	}
 	
+	/**
+     * Updates the column arrays based on the row arrays.
+     */
 	method void updateRows() {
 		let arrRow1[0] = arrCol1[0];
 		let arrRow1[1] = arrCol2[0];
@@ -368,6 +447,9 @@ class Table2048{
 		let arrRow4[3] = arrCol4[3];
 		return;
 	}
+	
+	
+    //Inserts a new tile with the number 2 at a random position on the board. 
 	method void insert2() {
 		if(arrRow2[3] = 0) {
 			let arrRow2[3] = 2;
@@ -456,6 +538,12 @@ class Table2048{
 		return;
 	}
 	
+	/**Checks if the game is over by verifying that there are no empty tiles
+    *  and no adjacent tiles with the same number.
+        
+    *  @Returns:
+    *  A boolean value indicating whether the game is over (True) or not (False).
+    */
 	method boolean checkGameOver() {
 		var boolean gameOver;
 		var int i;
@@ -507,6 +595,10 @@ class Table2048{
 		return gameOver;
 	}
 	
+	/**
+    Check if there's any tile on the game board has been changed.
+    @return true if any tile has been changed, false otherwise.
+	*/
 	method boolean checkIfSomthingChanged() {
 		var boolean changed;
 		let changed = false;
@@ -577,6 +669,9 @@ class Table2048{
 		return false;
 	}
 	
+	/**
+	Fills the screen with the tiles of the game board and their values.
+	*/
 	method void fillScreen() {
 		var int i, row, col;
 		let i = 0;
