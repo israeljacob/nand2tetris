@@ -21,7 +21,8 @@
   (define line1 "")
 
   (define (print word)
-    (display (string-append (string-repeat " " spaces) word "\n") output-port))
+    (display (string-append (string-repeat " " spaces) word "\n") output-port)
+    (display (string-append (string-repeat " " spaces) word "\n")))
   
   (define (advance)
     (set! line (read-line input-port))
