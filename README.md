@@ -17,6 +17,7 @@ Description: In this project, the focus shifts to program control in the virtual
 ## Project 9: High-Level Language
 
 Description: Project 9 introduces a high-level language that can be used to write programs for the virtual machine. It involves designing and implementing a language parser, syntax analyzer, and code generation components. The project aims to enable programmers to write programs in a more human-readable and expressive language, which can then be translated into the virtual machine's low-level instructions.
+I chose to implement the 2048 game.
 
 ## Project 10: Compiler I: Syntax Analysis
 
