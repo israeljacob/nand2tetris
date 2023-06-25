@@ -26,6 +26,7 @@ Description: Project 10 focuses on building a compiler for a high-level language
 
 Description: Project 11 extends the compiler by implementing the code generation phase. It involves translating the AST generated in the previous project into low-level instructions that can be executed by the virtual machine. The project focuses on efficient code generation techniques, optimization strategies, and generating executable code that closely matches the intended behavior of the high-level language.
 
+## Racket
 These projects were implemented using the Racket programming language. 
 
 Racket is a general-purpose programming language that belongs to the Lisp/Scheme family. It provides a rich set of features for functional programming, macros, and language extensibility. 
